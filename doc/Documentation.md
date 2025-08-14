@@ -5,7 +5,7 @@ This project is directly derived from <a href="https://github.com/davenardella/s
 
 ---
 ## Briefly
-Communication with Siemens PLCs via the S7 protocol occurs according to the classic client-server model, in which the PC is the client and the PLC is the server.
+Communication with Siemens PLCs via the S7 protocovl occurs according to the classic client-server model, in which the PC is the client and the PLC is the server.
 
 The mechanism is quite simple: to read or write data to a PLC, you must first connect to it and then send a read request, after which you will receive the data, or a write request containing the data to be written.
 In both cases, you will receive a response containing the outcome of the operation.
@@ -80,41 +80,36 @@ while !exit_request{
 ---
 
 #### Connection Setup
-+---------------------+------------------------------------------------+
+
+
+|Prototype|Behaviour|      
+|---|---|
 |`set_connection_type`|Changes the S7 connection type to the PLC       |
-+---------------------+------------------------------------------------+
 |`set_timeout`        |Sets operations timeout                         |
-+---------------------+------------------------------------------------+
 |`set_connection_port`|Sets the TCP Connection Port                    |
-+---------------------+------------------------------------------------+
+
 #### Connection
-+---------------------+-----------------------------------------------------+
+|Prototype|Behaviour|      
+|---|---|
 |`connect_s71200_1500`|Connects to the S71200 or S71500 families            |
-+---------------------+-----------------------------------------------------+
 |`connect_s7300`      |Connects to S7300 family                             |
-+---------------------+-----------------------------------------------------+
 |`connect_rack_slot`  |Connects to a Siemens PLC/Drive using Rack and Slot  |
-+---------------------+-----------------------------------------------------+
 |`connect_tsap`       |Connects to a Siemens ISO-Hardware using TSAP records|
-+---------------------+-----------------------------------------------------+
 |`disconnect`         |Closes the connection                                |
-+---------------------+-----------------------------------------------------+
+
 #### Raw Read/Write methods
-+----------------+------------------------------------------------------+
+|Prototype|Behaviour|      
+|---|---|
 |`read_area`     |Reads a block of data from a specific S7 memory area  |
-+----------------+------------------------------------------------------+
 |`write_area`    |Writes a block of data to a specific S7 memory area   |
-+----------------+------------------------------------------------------+
+
 #### Simplified Read/Write methods
-+----------------+------------------------------------------------------+
+|Prototype|Behaviour|      
+|---|---|
 |`read_db`       |Reads a block of byte from a specific Data Block (DB) |
-+----------------+------------------------------------------------------+
 |`read_bit`      |Reads a bit from a specific S7 memory area            |
-+----------------+------------------------------------------------------+
 |`write_db`      |Writes a block of byte to a specific Data Block (DB)  |
-+----------------+------------------------------------------------------+
 |`write_bit`     |Writes a bit to a specific S7 memory area             |
-+----------------+------------------------------------------------------+
 
 ## Connection setup methods
 ---

@@ -1,3 +1,6 @@
+// Rust7 - Native Rust S7 client (Snap7‑style) for Siemens PLCs.
+// Copyright 2025 - Davide Nardella
+
 use std::net::{TcpStream, ToSocketAddrs};
 use std::net::Shutdown;
 use std::time::Duration;
@@ -18,7 +21,6 @@ pub const S7_AREA_PA: u8 = 0x82;  // Process Outputs
 pub const S7_AREA_MK: u8 = 0x83;  // Merkers
 pub const S7_AREA_DB: u8 = 0x84;  // Data Block
 
-
 // Wordlen
 pub const S7_WL_BIT: u8 = 0x01;
 pub const S7_WL_BYTE: u8 = 0x02;
@@ -29,9 +31,7 @@ const TS_RES_BYTE: u8 = 0x04;
 
 // PDU related
 const TPKT_ISO_LEN: usize   = 7; // ISO Header length
-
 const PDU_LEN_REQ: u16      = 480; // PDU Length requested for negotiation
-
 const ISO_CR_LEN: usize     = 22;   // Connection request telegram size 
 const ISO_CONN_REQ: u8      = 0xE0; // ISO connection requesr
 const ISO_CONN_OK: u8       = 0xD0; // ISO connection accepted
@@ -43,7 +43,6 @@ const S7_ID: u8             = 0x32; // S7 Protocol ID
 
 const READ_REQ_LEN: usize   = 31; // TKPT + ISO + S7 headers
 const READ_RES_LEN: usize   = 18; // Read job response header length
-
 const WRITE_RES_LEN: usize  = 15; // Write job response header length
 
 const EOT: u8               = 0x80; // ISO End of Trasmission
@@ -58,7 +57,6 @@ const RES_INVALID_ADDRESS: u8 = 0x05;
 /// Resource not found
 /// - The DB doesn't exists in the CPU
 const RES_NOT_FOUND: u8       = 0x0A; 
-
 
 // Macros
 macro_rules! hi_part {
@@ -121,7 +119,6 @@ impl From<io::Error> for S7Error {
         S7Error::Io(err)
     }
 }
-
 pub struct S7Client {
     stream: Option<TcpStream>,
     port: u16,
