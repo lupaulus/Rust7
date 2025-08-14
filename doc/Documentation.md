@@ -265,8 +265,8 @@ pub fn read_area(&mut self, area: u8, db_number: u16, start: u16, wordlen: u8, b
 #### Values
 ##### area
 - `S7_AREA_PE` (0x81): Process Inputs
-- `S7_AREA_PA` (0x84): Process Outputs
-- `S7_AREA_MK` (0x84): Merkers
+- `S7_AREA_PA` (0x82): Process Outputs
+- `S7_AREA_MK` (0x83): Merkers
 - `S7_AREA_DB` (0x84): Data Block
 ##### wordlen 
 - `S7_WL_BIT` (0x01) : Bit access
@@ -319,8 +319,8 @@ pub fn write_area(&mut self, area: u8, db_number: u16, start: u16, wordlen: u8, 
 #### Values
 ##### area
 - `S7_AREA_PE` (0x81): Process Inputs
-- `S7_AREA_PA` (0x84): Process Outputs
-- `S7_AREA_MK` (0x84): Merkers
+- `S7_AREA_PA` (0x82): Process Outputs
+- `S7_AREA_MK` (0x83): Merkers
 - `S7_AREA_DB` (0x84): Data Block
 ##### wordlen 
 - `S7_WL_BIT` (0x01) : Bit access

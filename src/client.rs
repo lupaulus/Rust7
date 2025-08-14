@@ -468,8 +468,8 @@ impl S7Client {
     /// ### Values
     /// #### area
     /// - `S7_AREA_PE` (0x81): Process Inputs
-    /// - `S7_AREA_PA` (0x84): Process Outputs
-    /// - `S7_AREA_MK` (0x84): Merkers
+    /// - `S7_AREA_PA` (0x82): Process Outputs
+    /// - `S7_AREA_MK` (0x83): Merkers
     /// - `S7_AREA_DB` (0x84): Data Block
     /// #### wordlen 
     /// - `S7_WL_BIT` (0x01) : Bit access
@@ -621,8 +621,8 @@ impl S7Client {
     /// ### Values
     /// #### area
     /// - `S7_AREA_PE` (0x81): Process Inputs
-    /// - `S7_AREA_PA` (0x84): Process Outputs
-    /// - `S7_AREA_MK` (0x84): Merkers
+    /// - `S7_AREA_PA` (0x82): Process Outputs
+    /// - `S7_AREA_MK` (0x83): Merkers
     /// - `S7_AREA_DB` (0x84): Data Block
     /// #### wordlen 
     /// - `S7_WL_BIT` (0x01) : Bit access
