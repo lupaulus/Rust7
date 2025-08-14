@@ -336,7 +336,7 @@ impl S7Client {
     /// 
     /// ### Notes
     ///     The connection port used is 102 (S7Protocol Port) unless you
-    ///     changed it via `set_connection_port()`
+    ///     changed it via set_connection_port()
     ///
     /// ### Returns
     /// `Ok(())` on success, or an `S7Error` on failure.
@@ -444,7 +444,7 @@ impl S7Client {
     /// After disconnection, calls to read/write will return `S7Error::NotConnected`.
     /// 
     /// ### Notes
-    ///     A Client should be disconnected on low-level error (see `read_area()` and `write_area()` suggestion)
+    ///     A Client should be disconnected on low-level error (see read_area() and write_area() suggestion)
     /// 
     pub fn disconnect(&mut self) {
         if self.connected {
