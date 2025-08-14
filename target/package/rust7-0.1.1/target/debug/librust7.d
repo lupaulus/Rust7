@@ -1,0 +1,1 @@
+E:\GitHub\Rust7\target\package/rust7-0.1.1\target\debug\librust7.rlib: E:\GitHub\Rust7\target\package\rust7-0.1.1\README.md E:\GitHub\Rust7\target\package\rust7-0.1.1\src\client.rs E:\GitHub\Rust7\target\package\rust7-0.1.1\src\lib.rs
