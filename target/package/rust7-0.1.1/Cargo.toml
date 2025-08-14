@@ -13,7 +13,7 @@
 edition = "2021"
 name = "rust7"
 version = "0.1.1"
-authors = ["Davide Nardella <davenardella@member.fsf.org>"]
+authors = ["Davide Nardella <davenardella@live.it>"]
 build = false
 autolib = false
 autobins = false
