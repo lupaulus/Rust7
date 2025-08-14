@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"constant":["CT_OP","CT_PG","CT_S7","S7_AREA_DB","S7_AREA_MK","S7_AREA_PA","S7_AREA_PE","S7_WL_BIT","S7_WL_BYTE"],"enum":["S7Error"],"struct":["S7Client"]};
