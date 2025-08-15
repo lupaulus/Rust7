@@ -88,6 +88,7 @@ pub enum S7Error {
     IsoInvalidHeader,
     IsoInvalidTelegram,
     PduNegotiationFailed,
+    InvalidFunParameter,
     S7NotFound,
     S7InvalidAddress,
     S7Unspecified,
@@ -106,6 +107,7 @@ impl fmt::Display for S7Error {
             S7Error::IsoInvalidHeader => write!(f, "Invalid ISO Header"),
             S7Error::IsoInvalidTelegram => write!(f, "Invalid ISO Telegram"),
             S7Error::PduNegotiationFailed => write!(f, "S7 PDU negotiation failed"),
+            S7Error::InvalidFunParameter => write!(f, "Invalid parameter supplied to the function"),
             S7Error::S7NotFound => write!(f, "S7 Resource not found in the CPU"),
             S7Error::S7InvalidAddress => write!(f, "S7 Invalid address"),
             S7Error::S7Unspecified => write!(f, "S7 unspecified error"),
@@ -207,6 +209,16 @@ impl S7Client {
         }
     }
 
+    /// ### Check S7 Area validity
+    /// 
+    fn check_area(&mut self, area: u8) -> Result<(), S7Error> {
+        const AREAS: [u8; 4] = [S7_AREA_PE, S7_AREA_PA, S7_AREA_MK, S7_AREA_DB];
+        if !AREAS.contains(&area) {
+            return Err(S7Error::InvalidFunParameter);
+        }
+        Ok(())
+    }
+
     /// ### Changes the S7 connection type to the PLC
     ///
     /// The three possible connection types are:
@@ -226,12 +238,25 @@ impl S7Client {
     /// ### Parameters
     /// - `connection_type`: Connection type.
     ///
+    /// ### Returns
+    /// `Ok(())` on success, or an `S7Error` on failure.
+    ///
+    /// ### Errors
+    /// - `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+    /// 
     /// #### Notes
     /// 1. The client must not be connected (that is, call this method before connecting).
     /// 2. This method is not useful if you use `connect_tsap()` because the connection_type is already contained in the REMOTE_TSAP record.
     ///    
-    pub fn set_connection_type(&mut self, connection_type: u16){
+    pub fn set_connection_type(&mut self, connection_type: u16) -> Result<(), S7Error> {
+        
+        if connection_type < CT_PG || connection_type > CT_S7 {
+            return Err(S7Error::InvalidFunParameter);
+        }
+        
         self.conn_type = connection_type;
+
+        Ok(())
     }
 
     /// ### Sets operations timeout
@@ -241,20 +266,27 @@ impl S7Client {
     /// - `rd_timeout_ms` : Read Connection timeout (ms) (Default = 1000 ms)
     /// - `wr_timeout_ms` : Write Connection timeout (ms) (Default = 500 ms)
     /// 
+    /// ### Returns
+    /// `Ok(())` on success, or an `S7Error` on failure.
+    ///
+    /// ### Errors
+    /// - `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+    /// 
     /// ### Notes
     /// 1. Values must be > 0, otherwise they are ignored
     /// 2. The client must not be connected (that is, call this method before connecting).
     /// 
-    pub fn set_timeout(&mut self, co_timeout_ms: u64, rd_timeout_ms: u64, wr_timeout_ms: u64 ){
-        if co_timeout_ms > 0 {
-            self.co_timeout_ms = co_timeout_ms;
+    pub fn set_timeout(&mut self, co_timeout_ms: u64, rd_timeout_ms: u64, wr_timeout_ms: u64 ) -> Result<(), S7Error> {
+
+        if co_timeout_ms == 0 || rd_timeout_ms == 0 || wr_timeout_ms == 0 {
+            return Err(S7Error::InvalidFunParameter);
         }
-        if rd_timeout_ms > 0 {
-            self.rd_timeout_ms = rd_timeout_ms;
-        }
-        if wr_timeout_ms > 0 {
-            self.wr_timeout_ms = wr_timeout_ms;
-        }
+
+        self.co_timeout_ms = co_timeout_ms;
+        self.rd_timeout_ms = rd_timeout_ms;
+        self.wr_timeout_ms = wr_timeout_ms;
+
+        Ok(())
     }
 
     /// ### Sets the TCP Connection Port
@@ -264,14 +296,25 @@ impl S7Client {
     /// ### Parameters
     /// - `port`: TCP Connection port (1..65535)
     /// 
+    /// ### Returns
+    /// `Ok(())` on success, or an `S7Error` on failure.
+    ///
+    /// ### Errors
+    /// - `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+    /// 
     /// ### Notes
     /// 1. Value must be > 0, otherwise it is ignored
     /// 2. The client must not be connected (that is, call this method before connecting).
     /// 
-    pub fn set_connection_port(&mut self, port: u16) {
-        if port > 0 {
-            self.port = port;
+    pub fn set_connection_port(&mut self, port: u16)  -> Result<(), S7Error> {
+
+        if port == 0 {
+            return Err(S7Error::InvalidFunParameter);
         }
+
+        self.port = port;
+
+        Ok(())
     }
 
     /// ### Connects to the S71200 or S71500 families
@@ -495,6 +538,7 @@ impl S7Client {
     /// In case of a low-level error, it is **highly recommended** to disconnect and reconnect the Client (as WinCC or other SCADA do)
     /// 
     /// #### High level
+    /// - `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
     /// - `S7Error::NotFound`: The resource was not found (e.g. Inexistent DB).
     /// - `S7Error::S7InvalidAddress`:
     /// 1. Attempt to read beyond the limits.
@@ -509,6 +553,14 @@ impl S7Client {
 
         self.last_time = 0.0;
         self.chunks = 0;
+
+        // Check Area
+        let _ = self.check_area(area)?;
+
+        // Check Word Length
+        if wordlen != S7_WL_BIT && wordlen != S7_WL_BYTE {
+            return Err(S7Error::InvalidFunParameter);
+        }
 
         // Check connection
         if !self.connected {
@@ -649,6 +701,7 @@ impl S7Client {
     /// In case of a low-level error, it is **highly recommended** to disconnect and reconnect the Client (as WinCC or other SCADA do)
     /// 
     /// #### High level
+    /// - `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
     /// - `S7Error::NotFound`: The resource was not found (e.g. Inexistent DB).
     /// - `S7Error::S7InvalidAddress`:
     /// 1. Attempt to write beyond the limits.
@@ -664,6 +717,14 @@ impl S7Client {
 
         self.last_time = 0.0;
         self.chunks = 0;
+
+        // Check Area
+        let _ = self.check_area(area)?;
+
+        // Check Word Length
+        if wordlen != S7_WL_BIT && wordlen != S7_WL_BYTE {
+            return Err(S7Error::InvalidFunParameter);
+        }
 
         // Check connection
         if !self.connected {
@@ -817,6 +878,10 @@ impl S7Client {
     /// ### Returns
     /// `Ok(<bool>)` or `Err(<S7Error>)`
     /// 
+    /// ### Errors
+    /// - `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+    /// - Other reported by read_area()
+    /// 
     /// ### Suggestion
     ///   
     ///     Even reading a single bit requires an entire telegram.
@@ -827,9 +892,9 @@ impl S7Client {
     /// For further info, please refer to `read_area()`
     /// 
     pub fn read_bit(&mut self, area: u8, db_number: u16, byte_num: u16, bit_idx: u8) -> Result<bool, S7Error> {
-  
+
         if bit_idx > 7 { 
-            return Err(S7Error::S7InvalidAddress); 
+            return Err(S7Error::InvalidFunParameter); 
         }
   
         let start: u16 = byte_num * 8 + bit_idx as u16;
@@ -881,6 +946,10 @@ impl S7Client {
     /// ### Returns
     /// `Ok(())` Operation succeeded.
     /// 
+    /// ### Errors
+    /// - `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+    /// - Other reported by read_area()
+    /// 
     /// ### Notes
     ///     Writing a bit affects only that bit, leaving adjacent bits in the byte unchanged. 
     /// ---
@@ -889,7 +958,7 @@ impl S7Client {
    pub fn write_bit(&mut self, area: u8, db_number: u16, byte_num: u16, bit_idx: u8, value: bool) -> Result<(), S7Error> {
         
         if bit_idx > 7 { 
-            return Err(S7Error::S7InvalidAddress); 
+            return Err(S7Error::InvalidFunParameter); 
         }
   
         let start: u16 = byte_num * 8 + bit_idx as u16;

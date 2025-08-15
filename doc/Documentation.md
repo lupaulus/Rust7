@@ -135,6 +135,12 @@ In this case, use `CT_OP` or `CT_S7`.
  
 #### Parameters
 - `connection_type`: Connection type.
+ 
+#### Returns
+`Ok(())` on success, or an `S7Error` on failure.
+
+#### Errors
+- `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
 
 #### Notes
 1. The client must not be connected (that is, call this method before connecting).
@@ -152,7 +158,12 @@ pub fn set_timeout(&mut self, co_timeout_ms: u64, rd_timeout_ms: u64, wr_timeout
 - `rd_timeout_ms` : Read Connection timeout (ms) (Default = 1000 ms)
 - `wr_timeout_ms` : Write Connection timeout (ms) (Default = 500 ms)
 
- 
+#### Returns
+`Ok(())` on success, or an `S7Error` on failure.
+
+#### Errors
+- `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+
 #### Notes
 1. Values must be > 0, otherwise they are ignored
 2. The client must not be connected (that is, call this method before connecting).
@@ -164,8 +175,14 @@ pub fn set_connection_port(&mut self, port: u16)
 ### Sets the TCP Connection Port
 The default S7 Port is 102, but if you need NAT the addresses you can use this method to change the default value.
 
-### Parameters
-- `port`: TCP Connection port (1..65535)
+#### Parameters
+- `connection_type`: Connection type.
+ 
+#### Returns
+`Ok(())` on success, or an `S7Error` on failure.
+
+#### Errors
+- `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
 
 ### Notes
 1. Value must be > 0, otherwise it is ignored
@@ -423,7 +440,11 @@ pub fn read_bit(&mut self, area: u8, db_number: u16, byte_num: u16, bit_idx: u8)
  
  #### Returns
  `Ok(<bool>)` or `Err(<S7Error>)`
- 
+
+#### Errors
+- `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+- Other reported by read_area()
+
  #### Suggestion
  - Even reading a single bit requires an entire telegram.
  Since reading is non-invasive, if you need to read multiple bits 
@@ -456,6 +477,10 @@ To write **1** into DB10.DBX71.4 use:
 
 #### Returns
 `Ok(())` Operation succeeded.
+
+#### Errors
+- `S7Error::InvalidFunParam`: Invalid parameter supplied to the function.
+- Other reported by write_area()
 
 #### Notes
 - Writing a bit affects only that bit, leaving adjacent bits in the byte unchanged. 
