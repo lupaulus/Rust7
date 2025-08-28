@@ -1,5 +1,7 @@
 # Rust7 - Native Rust S7Client
 
+[![Rust CI](https://github.com/davenardella/Rust7/actions/workflows/ci.yml/badge.svg)](https://github.com/davenardella/Rust7/actions/workflows/ci.yml)
+
 Pragmatic native Rust S7 client (Snap7‑style) for Siemens PLCs. 
 
 ---
