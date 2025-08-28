@@ -9,20 +9,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    name: cargo build
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - run: cargo build --all-features
 
-      - name: Set up Rust
-        uses: actions/setup-rust@v1
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - run: cargo test --all-features
+
+  # Check formatting with rustfmt
+  formatting:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          rust-version: stable
-
-      - name: Build all crates
-        run: cargo build --workspace --all-targets --verbose
-
-      - name: Run tests
-        run: cargo test --workspace --all-features --verbose
-      
-      
+          components: rustfmt
+      - name: Rustfmt Check
+        uses: actions-rust-lang/rustfmt@v1
